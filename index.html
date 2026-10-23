@@ -3,48 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia do Formando - Pedagogia UNIR</title>
-    <!-- Tailwind CSS -->
+    <title>Portal do Concluinte | Pedagogia</title>
+    <!-- Tailwind CSS (CDN) para estilização moderna e responsiva -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
+    <!-- FontAwesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        unir: {
-                            blue: '#003366',
-                            light: '#0055A4',
-                            yellow: '#FFC107',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        /* Custom scrollbar for a cleaner look */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* Variáveis de cores para facilitar personalização */
+        :root {
+            --primary-color: #0f3057; /* Azul institucional */
+            --secondary-color: #00587a;
+            --accent-color: #e7e7de;
+            --highlight-color: #fca311;
         }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1; 
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; 
-        }
-        
+
+        /* Ocultar abas não ativas */
         .tab-content {
             display: none;
             animation: fadeIn 0.3s ease-in-out;
@@ -52,505 +31,379 @@
         .tab-content.active {
             display: block;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -5px;
-            top: 6px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #0055A4;
-            border: 2px solid white;
+        /* Estilo dos botões de navegação */
+        .nav-btn {
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        .nav-btn.active {
+            border-bottom: 3px solid var(--highlight-color);
+            color: var(--primary-color);
+            font-weight: bold;
+            background-color: #e2e8f0;
+        }
+
+        /* Acordeões para as responsabilidades */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-button.active i {
+            transform: rotate(180deg);
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans h-screen flex overflow-hidden">
+<body class="flex flex-col min-h-screen">
 
-    <!-- Sidebar / Navigation -->
-    <nav class="bg-unir-blue text-white w-64 flex-shrink-0 hidden md:flex flex-col shadow-xl z-10">
-        <div class="p-6 flex items-center justify-center border-b border-blue-800">
-            <div class="text-center">
-                <i class="fa-solid fa-graduation-cap text-4xl text-unir-yellow mb-2"></i>
-                <h1 class="text-xl font-bold leading-tight">Pedagogia UNIR</h1>
-                <p class="text-xs text-blue-200 mt-1">Campus Ariquemes</p>
+    <!-- Cabeçalho -->
+    <header class="bg-[#0f3057] text-white shadow-md">
+        <div class="container mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                <i class="fa-solid fa-graduation-cap text-3xl text-[#fca311]"></i>
+                <div>
+                    <h1 class="text-2xl font-bold">Portal do Concluinte</h1>
+                    <p class="text-sm text-gray-300">Guia de Procedimentos - Curso de Pedagogia</p>
+                </div>
             </div>
+            <p class="text-sm italic text-gray-300"><i class="fa-solid fa-circle-info mr-1"></i>Material de apoio discente</p>
         </div>
-        <div class="flex-1 overflow-y-auto py-4">
-            <ul class="space-y-1">
-                <li>
-                    <button onclick="switchTab('tcc')" id="btn-tcc" class="w-full text-left px-6 py-3 hover:bg-unir-light transition-colors active-tab bg-unir-light border-l-4 border-unir-yellow">
-                        <i class="fa-solid fa-book-open w-6 text-center mr-2"></i> TCC - Fluxo e Defesa
-                    </button>
-                </li>
-                <li>
-                    <button onclick="switchTab('atividades')" id="btn-atividades" class="w-full text-left px-6 py-3 hover:bg-unir-light transition-colors border-l-4 border-transparent">
-                        <i class="fa-solid fa-certificate w-6 text-center mr-2"></i> Ativ. Complementares
-                    </button>
-                </li>
-                <li>
-                    <button onclick="switchTab('riunir')" id="btn-riunir" class="w-full text-left px-6 py-3 hover:bg-unir-light transition-colors border-l-4 border-transparent">
-                        <i class="fa-solid fa-server w-6 text-center mr-2"></i> Repositório RIUNIR
-                    </button>
-                </li>
-                <li>
-                    <button onclick="switchTab('formandos')" id="btn-formandos" class="w-full text-left px-6 py-3 hover:bg-unir-light transition-colors border-l-4 border-transparent">
-                        <i class="fa-solid fa-calendar-check w-6 text-center mr-2"></i> Formandos 2025.1
-                    </button>
-                </li>
-                <li>
-                    <button onclick="switchTab('arquivos')" id="btn-arquivos" class="w-full text-left px-6 py-3 hover:bg-unir-light transition-colors border-l-4 border-transparent">
-                        <i class="fa-solid fa-download w-6 text-center mr-2"></i> Arquivos e Templates
-                    </button>
-                </li>
-            </ul>
-        </div>
-        <div class="p-4 border-t border-blue-800 text-xs text-center text-blue-300">
-            Guia de Procedimentos Acadêmicos
-        </div>
-    </nav>
+        
+        <!-- Navegação em Abas -->
+        <nav class="bg-gray-100 text-gray-700 w-full overflow-x-auto">
+            <div class="container mx-auto flex whitespace-nowrap">
+                <button onclick="openTab('inicio', this)" class="nav-btn active px-6 py-3 hover:bg-gray-200 focus:outline-none"><i class="fa-solid fa-house mr-2"></i>Início</button>
+                <button onclick="openTab('tcc', this)" class="nav-btn px-6 py-3 hover:bg-gray-200 focus:outline-none"><i class="fa-solid fa-book-open-reader mr-2"></i>TCC</button>
+                <button onclick="openTab('complementares', this)" class="nav-btn px-6 py-3 hover:bg-gray-200 focus:outline-none"><i class="fa-solid fa-puzzle-piece mr-2"></i>Atividades Complementares</button>
+                <button onclick="openTab('riunir', this)" class="nav-btn px-6 py-3 hover:bg-gray-200 focus:outline-none"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>RIUNIR</button>
+                <button onclick="openTab('formandos', this)" class="nav-btn px-6 py-3 hover:bg-gray-200 focus:outline-none"><i class="fa-solid fa-calendar-check mr-2"></i>Formandos 2025.1</button>
+                <button onclick="openTab('downloads', this)" class="nav-btn px-6 py-3 hover:bg-gray-200 focus:outline-none"><i class="fa-solid fa-download mr-2"></i>Downloads</button>
+            </div>
+        </nav>
+    </header>
 
-    <!-- Mobile Header -->
-    <div class="md:hidden fixed top-0 left-0 right-0 bg-unir-blue text-white p-4 shadow-md z-20 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <i class="fa-solid fa-graduation-cap text-unir-yellow"></i>
-            <span class="font-bold">Guia do Formando</span>
-        </div>
-        <button id="mobile-menu-btn" class="text-white text-2xl focus:outline-none">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-    </div>
+    <!-- Conteúdo Principal -->
+    <main class="flex-grow container mx-auto px-4 py-8">
 
-    <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 bg-unir-blue text-white z-10 pt-16 transform -translate-y-full transition-transform duration-300 md:hidden flex flex-col">
-        <ul class="space-y-1 p-4">
-            <li><button onclick="switchTab('tcc'); toggleMobileMenu()" class="w-full text-left p-4 hover:bg-unir-light rounded"><i class="fa-solid fa-book-open w-6"></i> TCC - Fluxo</button></li>
-            <li><button onclick="switchTab('atividades'); toggleMobileMenu()" class="w-full text-left p-4 hover:bg-unir-light rounded"><i class="fa-solid fa-certificate w-6"></i> Atividades</button></li>
-            <li><button onclick="switchTab('riunir'); toggleMobileMenu()" class="w-full text-left p-4 hover:bg-unir-light rounded"><i class="fa-solid fa-server w-6"></i> RIUNIR</button></li>
-            <li><button onclick="switchTab('formandos'); toggleMobileMenu()" class="w-full text-left p-4 hover:bg-unir-light rounded"><i class="fa-solid fa-calendar-check w-6"></i> Formandos</button></li>
-            <li><button onclick="switchTab('arquivos'); toggleMobileMenu()" class="w-full text-left p-4 hover:bg-unir-light rounded"><i class="fa-solid fa-download w-6"></i> Arquivos</button></li>
-        </ul>
-    </div>
+        <!-- ABA 1: Início -->
+        <section id="inicio" class="tab-content active">
+            <div class="bg-white rounded-lg shadow p-8 text-center max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-[#0f3057] mb-4">Bem-vindo(a) à Reta Final!</h2>
+                <p class="text-gray-600 mb-6 text-lg">Este portal foi criado para centralizar todas as informações, manuais e regulamentos necessários para a conclusão do seu curso de Pedagogia.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-100 cursor-pointer hover:shadow-md transition" onclick="document.querySelectorAll('.nav-btn')[1].click()">
+                        <i class="fa-solid fa-book-open text-4xl text-blue-500 mb-3"></i>
+                        <h3 class="font-bold text-lg">Normas do TCC</h3>
+                        <p class="text-sm text-gray-600">Entenda o fluxograma de defesa, prazos e responsabilidades[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span).</p>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-lg border border-green-100 cursor-pointer hover:shadow-md transition" onclick="document.querySelectorAll('.nav-btn')[2].click()">
+                        <i class="fa-solid fa-clock text-4xl text-green-500 mb-3"></i>
+                        <h3 class="font-bold text-lg">Horas Complementares</h3>
+                        <p class="text-sm text-gray-600">Como integralizar as 200h exigidas (Pesquisa e Extensão)[span_20](start_span)[span_20](end_span).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 overflow-y-auto bg-slate-50 relative pt-16 md:pt-0">
-        <div class="max-w-5xl mx-auto p-6 md:p-10">
-
-            <!-- TAB: TCC -->
-            <section id="tcc" class="tab-content active">
-                <header class="mb-8 border-b pb-4">
-                    <h2 class="text-3xl font-bold text-slate-800">Trabalho de Conclusão de Curso (TCC)</h2>
-                    <p class="text-slate-500 mt-2">Procedimentos, fluxograma e orientações para defesa.</p>
-                </header>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="col-span-1 lg:col-span-2">
-                        <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
-                            <h3 class="text-xl font-semibold mb-6 flex items-center gap-2 text-unir-blue">
-                                <i class="fa-solid fa-route"></i> Fluxograma de Etapas
-                            </h3>
-                            
-                            <div class="relative border-l-2 border-slate-200 ml-3 space-y-8">
-                                <div class="relative pl-6 timeline-item">
-                                    <h4 class="font-bold text-slate-800">1. Orientação</h4>
-                                    <p class="text-sm text-slate-600 mt-1">Escolha do(a) orientador(a) (vagas definidas pelo Coordenador de TCC). Assinatura da Carta Convite de Orientação.</p>
-                                </div>
-                                <div class="relative pl-6 timeline-item">
-                                    <h4 class="font-bold text-slate-800">2. Solicitação de Banca (SIGAA)</h4>
-                                    <p class="text-sm text-slate-600 mt-1">O orientador solicita o cadastro da banca no SIGAA com no mínimo <strong>15 dias</strong> de antecedência. Formação: Orientador (Presidente) + 2 membros internos + 2 suplentes.</p>
-                                    <div class="bg-blue-50 p-3 rounded text-xs mt-2 border border-blue-100">
-                                        <em>Caminho SIGAA (Orientador):</em> Ensino > Orientação Acadêmica Graduação > TCC > Solicitar Cadastro de Banca
-                                    </div>
-                                </div>
-                                <div class="relative pl-6 timeline-item">
-                                    <h4 class="font-bold text-slate-800">3. Defesa</h4>
-                                    <p class="text-sm text-slate-600 mt-1">Apresentação do TCC. A <strong>Ata de Defesa</strong> é preenchida via processo SEI (Modelo no processo 23118.010776/2023-11) e assinada por todos os membros e discente.</p>
-                                </div>
-                                <div class="relative pl-6 timeline-item">
-                                    <h4 class="font-bold text-slate-800">4. Correções e Versão Final</h4>
-                                    <p class="text-sm text-slate-600 mt-1">Após a defesa, o discente tem <strong>até 30 dias</strong> para realizar correções (ou 1 semana se sem correções).</p>
-                                </div>
-                                <div class="relative pl-6 timeline-item">
-                                    <h4 class="font-bold text-slate-800">5. Ficha Catalográfica e RIUNIR</h4>
-                                    <p class="text-sm text-slate-600 mt-1">Solicitar ficha catalográfica (inserir no texto). Salvar em PDF e enviar para o repositório RIUNIR. A nota final é lançada no SIGAA pelo orientador ao final do semestre.</p>
-                                </div>
-                            </div>
-                        </div>
+        <!-- ABA 2: TCC -->
+        <section id="tcc" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Coluna Esquerda: Fluxos -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-2xl font-bold text-[#0f3057] mb-4 border-b pb-2"><i class="fa-solid fa-timeline mr-2"></i>Fluxo de Desenvolvimento (Parte 1)</h2>
+                        <ul class="relative border-l border-gray-200 ml-3 space-y-4">
+                            <li class="mb-4 ml-6">
+                                <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white"><i class="fa-solid fa-user-plus text-blue-800 text-xs"></i></span>
+                                <h3 class="font-semibold text-gray-900">1. Escolha do Orientador(a)</h3>
+                                <p class="text-sm text-gray-500">Carta Convite de Orientação e início das reuniões[span_21](start_span)[span_21](end_span).</p>
+                            </li>
+                            <li class="mb-4 ml-6">
+                                <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white"><i class="fa-solid fa-pencil text-blue-800 text-xs"></i></span>
+                                <h3 class="font-semibold text-gray-900">2. Conclusão da Pesquisa</h3>
+                                <p class="text-sm text-gray-500">Produção da monografia e controle de frequência[span_22](start_span)[span_22](end_span).</p>
+                            </li>
+                            <li class="mb-4 ml-6">
+                                <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white"><i class="fa-solid fa-envelope-open-text text-blue-800 text-xs"></i></span>
+                                <h3 class="font-semibold text-gray-900">3. Solicitação de Defesa</h3>
+                                <p class="text-sm text-gray-500">O orientador cadastra a banca no SIGAA com antecedência mínima de 15 dias[span_23](start_span)[span_23](end_span)[span_24](start_span)[span_24](end_span). O chefe homologa e gera Ata via SEI[span_25](start_span)[span_25](end_span).</p>
+                            </li>
+                            <li class="ml-6">
+                                <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full -left-3 ring-8 ring-white"><i class="fa-solid fa-gavel text-white text-xs"></i></span>
+                                <h3 class="font-semibold text-gray-900">4. Defesa</h3>
+                                <p class="text-sm text-gray-500">Apresentação para a banca (Presidente, 2 internos, 2 suplentes)[span_26](start_span)[span_26](end_span)[span_27](start_span)[span_27](end_span).</p>
+                            </li>
+                        </ul>
                     </div>
 
-                    <div class="col-span-1 space-y-6">
-                        <div class="bg-yellow-50 rounded-xl shadow-sm p-5 border border-yellow-200">
-                            <h4 class="font-bold text-yellow-800 flex items-center gap-2 mb-2">
-                                <i class="fa-solid fa-triangle-exclamation"></i> Responsabilidades do Acadêmico
-                            </h4>
-                            <ul class="text-sm text-yellow-900 space-y-2 list-disc pl-4">
-                                <li>Cumprir prazos de entrega.</li>
-                                <li>Comparecer às orientações marcadas.</li>
-                                <li>Solicitar a Ficha Catalográfica na Biblioteca.</li>
-                                <li>Realizar o Autoarquivamento no RIUNIR (entregar Termo de Autorização).</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-slate-800 text-white rounded-xl shadow-sm p-5">
-                            <h4 class="font-bold flex items-center gap-2 mb-2">
-                                <i class="fa-solid fa-laptop-code"></i> Sistemas Utilizados
-                            </h4>
-                            <div class="space-y-3 mt-4">
-                                <div class="flex items-center justify-between border-b border-slate-600 pb-2">
-                                    <span class="text-sm">SIGAA</span>
-                                    <span class="text-xs bg-slate-600 px-2 py-1 rounded">Banca / Notas</span>
-                                </div>
-                                <div class="flex items-center justify-between border-b border-slate-600 pb-2">
-                                    <span class="text-sm">SEI</span>
-                                    <span class="text-xs bg-slate-600 px-2 py-1 rounded">Atas e Docs</span>
-                                </div>
-                                <div class="flex items-center justify-between pb-2">
-                                    <span class="text-sm">RIUNIR</span>
-                                    <span class="text-xs bg-slate-600 px-2 py-1 rounded">Repositório Final</span>
-                                </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-2xl font-bold text-[#0f3057] mb-4 border-b pb-2"><i class="fa-solid fa-file-circle-check mr-2"></i>Fluxo Pós-Defesa (Parte 2)</h2>
+                        <div class="flex flex-col md:flex-row gap-4 mb-6">
+                            <div class="bg-green-50 border border-green-200 p-4 rounded flex-1">
+                                <h4 class="font-bold text-green-800"><i class="fa-solid fa-check-circle mr-1"></i>Sem Correções</h4>
+                                <p class="text-sm mt-1">Prazo: <strong>1 semana</strong> para envio da Cópia definitiva em PDF[span_28](start_span)[span_28](end_span).</p>
                             </div>
+                            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded flex-1">
+                                <h4 class="font-bold text-yellow-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Com Correções</h4>
+                                <p class="text-sm mt-1">Prazo: <strong>30 dias</strong> para ajustar, passar por apreciação e enviar PDF[span_29](start_span)[span_29](end_span).</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded border text-sm">
+                            <strong>Etapa Final:</strong> Solicitar Ficha Catalográfica na Biblioteca, inserir no arquivo final e protocolar cópia digital acompanhada do Termo de Autorização e Declaração de Distribuição Não Exclusiva (RIUNIR)[span_30](start_span)[span_30](end_span). O professor lançará a nota no SIGAA ao final do semestre[span_31](start_span)[span_31](end_span).
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- TAB: ATIVIDADES COMPLEMENTARES -->
-            <section id="atividades" class="tab-content">
-                <header class="mb-8 border-b pb-4">
-                    <h2 class="text-3xl font-bold text-slate-800">Atividades Complementares</h2>
-                    <p class="text-slate-500 mt-2">Normatização para o curso de Licenciatura em Pedagogia (200 horas).</p>
-                </header>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <!-- Grupo 1 -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border-t-4 border-unir-blue border-x border-b border-slate-200">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-xl font-bold text-slate-800">Grupo I: Pesquisa</h3>
-                            <span class="bg-blue-100 text-unir-blue font-bold px-3 py-1 rounded-full text-sm">Mínimo 40h</span>
-                        </div>
-                        <p class="text-sm text-slate-600 mb-4">Produção científica, publicações, resumos e participação em projetos.</p>
-                        <ul class="text-sm space-y-2 text-slate-700">
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Participação PIBIC/PIBITI (20h/semestre)</li>
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Resumos em eventos (5h - 10h)</li>
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Artigos completos B3 ou superior (30h)</li>
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Capítulos de Livros (15h)</li>
+                <!-- Coluna Direita: Responsabilidades -->
+                <div class="bg-white rounded-lg shadow p-6 h-fit">
+                    <h2 class="text-xl font-bold text-[#0f3057] mb-4 border-b pb-2">Responsabilidades</h2>
+                    
+                    <button class="accordion-button w-full text-left font-semibold py-2 text-gray-700 hover:text-blue-600 flex justify-between items-center" onclick="toggleAccordion(this)">
+                        Acadêmico(a) <i class="fa-solid fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="accordion-content text-sm text-gray-600 px-2">
+                        <ul class="list-disc pl-4 py-2 space-y-1">
+                            <li>Cumprir cronograma e comparecer às orientações[span_32](start_span)[span_32](end_span).</li>
+                            <li>Entregar versões para defesa aos membros da banca[span_33](start_span)[span_33](end_span).</li>
+                            <li>Solicitar ficha catalográfica (com assinatura do orientador atestando correções)[span_34](start_span)[span_34](end_span).</li>
+                            <li>Protocolar cópia digital na biblioteca com Termos de Autorização do RIUNIR[span_35](start_span)[span_35](end_span)[span_36](start_span)[span_36](end_span).</li>
                         </ul>
+                    </div>
+
+                    <button class="accordion-button w-full text-left font-semibold py-2 text-gray-700 hover:text-blue-600 flex justify-between items-center border-t mt-2" onclick="toggleAccordion(this)">
+                        Orientador(a) <i class="fa-solid fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="accordion-content text-sm text-gray-600 px-2">
+                        <ul class="list-disc pl-4 py-2 space-y-1">
+                            <li>Supervisionar etapas e manter registros de frequência[span_37](start_span)[span_37](end_span).</li>
+                            <li>Designar banca e definir local/data/hora[span_38](start_span)[span_38](end_span)[span_39](start_span)[span_39](end_span).</li>
+                            <li>Assinar Ata via SEI e termo de anuência das correções finais[span_40](start_span)[span_40](end_span)[span_41](start_span)[span_41](end_span).</li>
+                            <li>Lançar a nota final no SIGAA[span_42](start_span)[span_42](end_span).</li>
+                        </ul>
+                    </div>
+
+                    <button class="accordion-button w-full text-left font-semibold py-2 text-gray-700 hover:text-blue-600 flex justify-between items-center border-t mt-2" onclick="toggleAccordion(this)">
+                        Banca Examinadora <i class="fa-solid fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="accordion-content text-sm text-gray-600 px-2">
+                        <ul class="list-disc pl-4 py-2 space-y-1">
+                            <li>Analisar trabalho previamente[span_43](start_span)[span_43](end_span).</li>
+                            <li>Reunir-se na data/hora estabelecida e avaliar segundo critérios do regulamento[span_44](start_span)[span_44](end_span).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA 3: Complementares -->
+        <section id="complementares" class="tab-content">
+            <div class="bg-white rounded-lg shadow p-6 mb-6">
+                <h2 class="text-2xl font-bold text-[#0f3057] mb-2"><i class="fa-solid fa-puzzle-piece mr-2"></i>Atividades Complementares</h2>
+                <p class="text-gray-600 mb-4">A integralização exige um <strong>total de 200 horas</strong> obrigatórias[span_45](start_span)[span_45](end_span). As horas de TCC e Estágio Obrigatório <strong>não</strong> são contabilizadas aqui[span_46](start_span)[span_46](end_span).</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Grupo 1 -->
+                    <div class="border rounded-lg overflow-hidden">
+                        <div class="bg-blue-800 text-white font-bold p-3 text-center">
+                            Grupo I - Pesquisa (Mínimo: 40h)[span_47](start_span)[span_47](end_span)
+                        </div>
+                        <div class="p-4 bg-gray-50 h-full">
+                            <ul class="space-y-3 text-sm text-gray-700">
+                                <li><i class="fa-solid fa-caret-right text-blue-500 mr-2"></i><strong>PIBIC/PIBITI:</strong> 20h por semestre[span_48](start_span)[span_48](end_span).</li>
+                                <li><i class="fa-solid fa-caret-right text-blue-500 mr-2"></i><strong>Projeto de Pesquisa:</strong> 10h por semestre[span_49](start_span)[span_49](end_span).</li>
+                                <li><i class="fa-solid fa-caret-right text-blue-500 mr-2"></i><strong>Artigo Qualis B3+:</strong> 30h por publicação[span_50](start_span)[span_50](end_span).</li>
+                                <li><i class="fa-solid fa-caret-right text-blue-500 mr-2"></i><strong>Capítulo de Livro:</strong> 15h por publicação[span_51](start_span)[span_51](end_span).</li>
+                                <li><i class="fa-solid fa-caret-right text-blue-500 mr-2"></i><strong>Resumo em Evento:</strong> 5 a 10h (máx 2 trab/evento)[span_52](start_span)[span_52](end_span).</li>
+                            </ul>
+                            <p class="text-xs text-gray-500 mt-4 italic">* Utilizar Formulário Apêndice II para requerimento[span_53](start_span)[span_53](end_span).</p>
+                        </div>
                     </div>
 
                     <!-- Grupo 2 -->
-                    <div class="bg-white rounded-xl shadow-sm p-6 border-t-4 border-unir-yellow border-x border-b border-slate-200">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-xl font-bold text-slate-800">Grupo II: Extensão</h3>
-                            <span class="bg-yellow-100 text-yellow-800 font-bold px-3 py-1 rounded-full text-sm">Mínimo 160h</span>
+                    <div class="border rounded-lg overflow-hidden">
+                        <div class="bg-green-700 text-white font-bold p-3 text-center">
+                            Grupo II - Extensão e Outros (Mínimo: 160h)[span_54](start_span)[span_54](end_span)
                         </div>
-                        <p class="text-sm text-slate-600 mb-4">Cursos, seminários, palestras, idiomas e monitorias.</p>
-                        <ul class="text-sm space-y-2 text-slate-700">
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Cursos presenciais/EAD afins (Máx 80h)</li>
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Idiomas/Informática (Máx 80h)</li>
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> PIBID, Residência Pedagógica (Sem limite)</li>
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i> Monitoria e Extensão Universitária</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-5 flex gap-4 items-start">
-                    <div class="text-blue-500 text-2xl mt-1">
-                        <i class="fa-solid fa-magnifying-glass-location"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-blue-900 mb-1">Como localizar seus certificados?</h4>
-                        <p class="text-sm text-blue-800 mb-2">Para comprovação das horas, você precisará dos certificados em anexo às planilhas (Apêndices II e III).</p>
-                        <ul class="list-disc pl-5 text-sm text-blue-800 space-y-1">
-                            <li><strong>Eventos Gerais:</strong> Acessar <em>SIGAA > Extensão > Declarações e Certificados</em></li>
-                            <li><strong>Eventos DACED:</strong> Localizar resumos publicados acessando: <a href="#" class="underline font-medium hover:text-blue-600">decedarq.unir.br</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB: RIUNIR -->
-            <section id="riunir" class="tab-content">
-                <header class="mb-8 border-b pb-4">
-                    <h2 class="text-3xl font-bold text-slate-800">Repositório RIUNIR</h2>
-                    <p class="text-slate-500 mt-2">Passo a passo para o autoarquivamento do seu TCC.</p>
-                </header>
-
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="p-6">
-                        <h3 class="text-lg font-bold mb-4">Fluxo de Autoarquivamento</h3>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <!-- Passo 1 -->
-                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-100 relative group hover:bg-blue-50 transition">
-                                <div class="absolute -top-3 -left-3 bg-unir-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow">1</div>
-                                <div class="text-center mb-3 text-unir-blue text-2xl mt-2"><i class="fa-solid fa-user-plus"></i></div>
-                                <h4 class="font-bold text-center text-sm mb-2">Cadastro</h4>
-                                <p class="text-xs text-slate-600 text-center">Acesse <strong>ri.unir.br</strong> e clique em "Entrar > Usuário Novo". Registre com e-mail e confirme no link enviado.</p>
-                            </div>
-                            
-                            <!-- Passo 2 -->
-                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-100 relative group hover:bg-blue-50 transition">
-                                <div class="absolute -top-3 -left-3 bg-unir-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow">2</div>
-                                <div class="text-center mb-3 text-unir-blue text-2xl mt-2"><i class="fa-solid fa-folder-open"></i></div>
-                                <h4 class="font-bold text-center text-sm mb-2">Novo Depósito</h4>
-                                <p class="text-xs text-slate-600 text-center">Após login, clique em "Iniciar novo depósito" e selecione a coleção correta do campus Ariquemes.</p>
-                            </div>
-
-                            <!-- Passo 3 -->
-                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-100 relative group hover:bg-blue-50 transition">
-                                <div class="absolute -top-3 -left-3 bg-unir-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow">3</div>
-                                <div class="text-center mb-3 text-unir-blue text-2xl mt-2"><i class="fa-solid fa-keyboard"></i></div>
-                                <h4 class="font-bold text-center text-sm mb-2">Metadados</h4>
-                                <p class="text-xs text-slate-600 text-center">Preencha Autores, Título, Data, Resumo e Palavras-chave. Em seguida, faça o upload do PDF.</p>
-                            </div>
-
-                            <!-- Passo 4 -->
-                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-100 relative group hover:bg-blue-50 transition">
-                                <div class="absolute -top-3 -left-3 bg-unir-blue text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow">4</div>
-                                <div class="text-center mb-3 text-unir-blue text-2xl mt-2"><i class="fa-solid fa-scale-balanced"></i></div>
-                                <h4 class="font-bold text-center text-sm mb-2">Licença</h4>
-                                <p class="text-xs text-slate-600 text-center">Conceda a licença Creative Commons 4.0. Confirme o termo e aguarde o status de aceitação.</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-slate-100 px-6 py-4 flex flex-col sm:flex-row justify-between items-center border-t border-slate-200">
-                        <span class="text-sm text-slate-600 mb-2 sm:mb-0"><i class="fa-solid fa-circle-info mr-1"></i> Precisa de ajuda detalhada?</span>
-                        <a href="https://ri.unir.br" target="_blank" class="px-4 py-2 bg-unir-blue text-white text-sm rounded hover:bg-blue-800 transition shadow">
-                            Acessar RIUNIR <i class="fa-solid fa-external-link-alt ml-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB: FORMANDOS 2025.1 -->
-            <section id="formandos" class="tab-content">
-                <header class="mb-8 border-b pb-4">
-                    <h2 class="text-3xl font-bold text-slate-800">Orientações para Formandos 2025.1</h2>
-                    <p class="text-slate-500 mt-2">Prazos e documentações críticas para colação de grau.</p>
-                </header>
-
-                <!-- Warning Box Critico -->
-                <div class="bg-red-50 border-l-4 border-red-600 rounded-r-lg p-5 mb-8 shadow-sm">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <i class="fa-solid fa-triangle-exclamation text-red-600 text-xl mt-1"></i>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="text-red-800 font-bold text-lg">Atenção Especial: Ordem de Solicitação</h3>
-                            <p class="text-red-700 mt-2 text-sm leading-relaxed">
-                                Ao solicitar o <strong>NADA CONSTA</strong> no SIGAA, o sistema é bloqueado para emissão da <strong>FICHA CATALOGRÁFICA</strong>, que é item obrigatório para a versão final do TCC.
-                            </p>
-                            <p class="text-red-800 font-semibold mt-2 text-sm">
-                                COMO FAZER CORRETAMENTE:
-                                Solicite o NADA CONSTA para requerer a colação e <em>depois contate a bibliotecária</em> para o desbloqueio do sistema para emissão da ficha catalográfica.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2"><i class="fa-regular fa-calendar-days text-unir-blue mr-2"></i> Prazos Importantes</h3>
-                        
-                        <div class="space-y-4">
-                            <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="font-bold text-slate-700">Requerimento de Colação</span>
-                                    <span class="bg-blue-100 text-unir-blue text-xs font-bold px-2 py-1 rounded">14 a 18 Jul, 2025</span>
-                                </div>
-                                <p class="text-sm text-slate-600">Assinar requerimento via GOV.BR e enviar toda a documentação para <strong>deced.arq@unir.br</strong>.</p>
-                            </div>
-                            
-                            <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="font-bold text-slate-700">Submissão Final de TCC</span>
-                                    <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded">Até 25 Jul, 2025</span>
-                                </div>
-                                <p class="text-sm text-slate-600">Arquivos inseridos para arquivamento documental. A colação está prevista para início de Agosto/2025.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 class="text-xl font-bold text-slate-800 mb-4 border-b pb-2"><i class="fa-solid fa-list-check text-unir-blue mr-2"></i> Checklist de Documentos</h3>
-                        
-                        <div class="bg-white p-5 rounded-lg shadow-sm border border-slate-200">
-                            <p class="text-sm text-slate-500 mb-3">Salvar tudo em ARQUIVO ÚNICO em PDF:</p>
-                            <ul class="space-y-3">
-                                <li class="flex items-center text-sm">
-                                    <i class="fa-regular fa-square-check text-green-500 text-lg mr-3"></i>
-                                    <span class="text-slate-700">Requerimento Assinado (GOV.BR)</span>
-                                </li>
-                                <li class="flex items-center text-sm">
-                                    <i class="fa-regular fa-square-check text-green-500 text-lg mr-3"></i>
-                                    <span class="text-slate-700">Cópia do RG</span>
-                                </li>
-                                <li class="flex items-center text-sm">
-                                    <i class="fa-regular fa-square-check text-green-500 text-lg mr-3"></i>
-                                    <span class="text-slate-700">Cópia do CPF</span>
-                                </li>
-                                <li class="flex items-center text-sm">
-                                    <i class="fa-regular fa-square-check text-green-500 text-lg mr-3"></i>
-                                    <span class="text-slate-700">Nada Consta da Biblioteca (Emitido SIGAA)</span>
-                                </li>
+                        <div class="p-4 bg-gray-50 h-full">
+                            <ul class="space-y-3 text-sm text-gray-700">
+                                <li><i class="fa-solid fa-caret-right text-green-500 mr-2"></i><strong>Cursos Presenciais:</strong> Máx 80h computáveis[span_55](start_span)[span_55](end_span).</li>
+                                <li><i class="fa-solid fa-caret-right text-green-500 mr-2"></i><strong>Cursos EAD:</strong> Máx 80h computáveis[span_56](start_span)[span_56](end_span).</li>
+                                <li><i class="fa-solid fa-caret-right text-green-500 mr-2"></i><strong>Idiomas / Informática:</strong> Máx 80h somadas[span_57](start_span)[span_57](end_span).</li>
+                                <li><i class="fa-solid fa-caret-right text-green-500 mr-2"></i><strong>PIBID / Residência / Monitoria:</strong> Sem limite de horas[span_58](start_span)[span_58](end_span).</li>
+                                <li><i class="fa-solid fa-caret-right text-green-500 mr-2"></i><strong>Eventos / Palestras:</strong> Sem limite, se na área de educação[span_59](start_span)[span_59](end_span).</li>
                             </ul>
+                            <p class="text-xs text-gray-500 mt-4 italic">* Utilizar Formulário Apêndice III para requerimento[span_60](start_span)[span_60](end_span).</p>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+            <div class="bg-blue-50 p-4 border border-blue-200 rounded-lg text-sm text-blue-800">
+                <i class="fa-solid fa-magnifying-glass mr-2"></i><strong>Dica:</strong> Para localizar certificados no SIGAA, acesse: <em>Extensão > Declarações e Certificados</em>[span_61](start_span)[span_61](end_span).
+            </div>
+        </section>
 
-            <!-- TAB: ARQUIVOS E TEMPLATES -->
-            <section id="arquivos" class="tab-content">
-                <header class="mb-8 border-b pb-4">
-                    <h2 class="text-3xl font-bold text-slate-800">Arquivos e Templates</h2>
-                    <p class="text-slate-500 mt-2">Central de downloads de formulários e documentos editáveis necessários para sua formatura.</p>
-                </header>
+        <!-- ABA 4: RIUNIR -->
+        <section id="riunir" class="tab-content">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-[#0f3057] mb-4"><i class="fa-solid fa-cloud-arrow-up mr-2"></i>Autoarquivamento no RIUNIR</h2>
+                <p class="text-gray-600 mb-6">Todos os TCCs aprovados devem ser enviados ao Repositório Institucional (RIUNIR). Siga o passo a passo resumido abaixo[span_62](start_span)[span_62](end_span).</p>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    
-                    <!-- Card 1 -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition flex flex-col">
-                        <div class="p-5 flex-1">
-                            <div class="w-12 h-12 bg-blue-100 text-unir-blue rounded-lg flex items-center justify-center text-2xl mb-4">
-                                <i class="fa-solid fa-file-word"></i>
-                            </div>
-                            <h3 class="font-bold text-slate-800 mb-1">Requerimento de Colação de Grau</h3>
-                            <p class="text-xs text-slate-500">Documento base para solicitação de colação, emissão de diploma e histórico. (Versão 2024.2 / 2025.1).</p>
-                        </div>
-                        <div class="border-t border-slate-100 p-3 bg-slate-50 rounded-b-xl">
-                            <button class="w-full py-2 text-sm font-semibold text-unir-blue bg-white border border-unir-blue rounded hover:bg-unir-blue hover:text-white transition cursor-pointer" onclick="downloadMock()">
-                                <i class="fa-solid fa-download mr-1"></i> Baixar Documento
-                            </button>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 bg-blue-100 text-blue-800 rounded-full h-8 w-8 flex items-center justify-center font-bold mr-3 mt-1">1</div>
+                        <div>
+                            <h4 class="font-bold">Cadastro</h4>
+                            <p class="text-sm text-gray-600">Acesse <strong>ri.unir.br</strong>, clique em "Entrar em: Meu Espaço". Escolha "Usuário Novo" caso não tenha conta. Confirme o link enviado para o seu e-mail[span_63](start_span)[span_63](end_span)[span_64](start_span)[span_64](end_span)[span_65](start_span)[span_65](end_span)[span_66](start_span)[span_66](end_span).</p>
                         </div>
                     </div>
-
-                    <!-- Card 2 -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition flex flex-col">
-                        <div class="p-5 flex-1">
-                            <div class="w-12 h-12 bg-blue-100 text-unir-blue rounded-lg flex items-center justify-center text-2xl mb-4">
-                                <i class="fa-solid fa-file-lines"></i>
-                            </div>
-                            <h3 class="font-bold text-slate-800 mb-1">Formulários de ACs (Apêndices)</h3>
-                            <p class="text-xs text-slate-500">Apêndice I (Produção), Apêndice II (Grupo I) e Apêndice III (Grupo II). Editável para preenchimento de horas.</p>
-                        </div>
-                        <div class="border-t border-slate-100 p-3 bg-slate-50 rounded-b-xl">
-                            <button class="w-full py-2 text-sm font-semibold text-unir-blue bg-white border border-unir-blue rounded hover:bg-unir-blue hover:text-white transition cursor-pointer" onclick="downloadMock()">
-                                <i class="fa-solid fa-download mr-1"></i> Baixar Formulários
-                            </button>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 bg-blue-100 text-blue-800 rounded-full h-8 w-8 flex items-center justify-center font-bold mr-3 mt-1">2</div>
+                        <div>
+                            <h4 class="font-bold">Iniciar Depósito</h4>
+                            <p class="text-sm text-gray-600">Faça login, clique em "Iniciar um novo depósito" e selecione a coleção adequada (ex: Campus Ariquemes > Pedagogia (Monografias))[span_67](start_span)[span_67](end_span)[span_68](start_span)[span_68](end_span)[span_69](start_span)[span_69](end_span).</p>
                         </div>
                     </div>
-
-                    <!-- Card 3 -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition flex flex-col">
-                        <div class="p-5 flex-1">
-                            <div class="w-12 h-12 bg-blue-100 text-unir-blue rounded-lg flex items-center justify-center text-2xl mb-4">
-                                <i class="fa-solid fa-file-pdf"></i>
-                            </div>
-                            <h3 class="font-bold text-slate-800 mb-1">Modelo de Ata de Defesa</h3>
-                            <p class="text-xs text-slate-500">Ref: Processo SEI 23118.010776/2023-11. Para ser preenchido pelo orientador e assinado digitalmente.</p>
-                        </div>
-                        <div class="border-t border-slate-100 p-3 bg-slate-50 rounded-b-xl">
-                            <button class="w-full py-2 text-sm font-semibold text-unir-blue bg-white border border-unir-blue rounded hover:bg-unir-blue hover:text-white transition cursor-pointer" onclick="downloadMock()">
-                                <i class="fa-solid fa-download mr-1"></i> Baixar Modelo
-                            </button>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 bg-blue-100 text-blue-800 rounded-full h-8 w-8 flex items-center justify-center font-bold mr-3 mt-1">3</div>
+                        <div>
+                            <h4 class="font-bold">Metadados e Resumo</h4>
+                            <p class="text-sm text-gray-600">Preencha os autores, título, ano, e selecione o idioma (N/A se não aplicar). Na próxima tela, insira as <strong>palavras-chave</strong> e cole o <strong>resumo</strong> do TCC[span_70](start_span)[span_70](end_span)[span_71](start_span)[span_71](end_span)[span_72](start_span)[span_72](end_span).</p>
                         </div>
                     </div>
-
-                    <!-- Card 4 -->
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition flex flex-col">
-                        <div class="p-5 flex-1">
-                            <div class="w-12 h-12 bg-blue-100 text-unir-blue rounded-lg flex items-center justify-center text-2xl mb-4">
-                                <i class="fa-solid fa-file-signature"></i>
-                            </div>
-                            <h3 class="font-bold text-slate-800 mb-1">Termo de Autorização RIUNIR</h3>
-                            <p class="text-xs text-slate-500">Declaração de Distribuição Não Exclusiva para Publicação Digital e Direitos Autorais.</p>
-                        </div>
-                        <div class="border-t border-slate-100 p-3 bg-slate-50 rounded-b-xl">
-                            <button class="w-full py-2 text-sm font-semibold text-unir-blue bg-white border border-unir-blue rounded hover:bg-unir-blue hover:text-white transition cursor-pointer" onclick="downloadMock()">
-                                <i class="fa-solid fa-download mr-1"></i> Baixar Termo
-                            </button>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 bg-blue-100 text-blue-800 rounded-full h-8 w-8 flex items-center justify-center font-bold mr-3 mt-1">4</div>
+                        <div>
+                            <h4 class="font-bold">Upload do PDF e Licença</h4>
+                            <p class="text-sm text-gray-600">Envie o arquivo final em PDF. Verifique os dados na tela de revisão e, na última etapa, leia a Declaração e clique em <strong>"Eu concedo a licença"</strong>[span_73](start_span)[span_73](end_span)[span_74](start_span)[span_74](end_span)[span_75](start_span)[span_75](end_span). Aguarde a confirmação[span_76](start_span)[span_76](end_span).</p>
                         </div>
                     </div>
-
                 </div>
-            </section>
+            </div>
+        </section>
 
-        </div>
+        <!-- ABA 5: Formandos -->
+        <section id="formandos" class="tab-content">
+            <div class="bg-white rounded-lg shadow p-6 border-t-4 border-red-500">
+                <h2 class="text-2xl font-bold text-red-700 mb-2"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Atenção Formandos 2025.1</h2>
+                
+                <div class="bg-red-50 text-red-800 p-4 rounded-lg my-4 border border-red-200 shadow-inner">
+                    <h3 class="font-bold text-lg mb-1">Cuidado com o bloqueio do SIGAA!</h3>
+                    <p class="text-sm">Ao solicitar o <strong>"Nada Consta"</strong> da biblioteca no SIGAA, o sistema <strong>bloqueia</strong> a emissão da Ficha Catalográfica[span_77](start_span)[span_77](end_span). Como a ficha é obrigatória para enviar o TCC, <strong>solicite o Nada Consta APENAS DEPOIS</strong> de já possuir a Ficha Catalográfica, ou contate a bibliotecária para desbloqueio[span_78](start_span)[span_78](end_span).</p>
+                </div>
+
+                <h3 class="font-bold mt-6 mb-3 text-gray-800">Cronograma de Ações:</h3>
+                <ol class="list-decimal pl-5 space-y-3 text-sm text-gray-700">
+                    <li><strong>Até 25/07/2025:</strong> Inserir a versão final do TCC no RIUNIR[span_79](start_span)[span_79](end_span). A ordem do arquivo deve ser: Capa, Folha de Rosto, Ficha Catalográfica e Termo de Aprovação (Ata assinada via SEI)[span_80](start_span)[span_80](end_span).</li>
+                    <li><strong>De 14/07 a 18/07/2025:</strong> Enviar o Requerimento de Colação de Grau[span_81](start_span)[span_81](end_span).
+                        <ul class="list-disc pl-5 mt-1 text-gray-500">
+                            <li>Preencher o requerimento[span_82](start_span)[span_82](end_span) e assinar via GOV.BR[span_83](start_span)[span_83](end_span).</li>
+                            <li>Anexar RG, CPF e Nada Consta[span_84](start_span)[span_84](end_span).</li>
+                            <li>Salvar tudo em PDF único e enviar para <em>deced.arq@unir.br</em>[span_85](start_span)[span_85](end_span).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Colação de Grau:</strong> A data será definida após o início do semestre (previsão: início de agosto)[span_86](start_span)[span_86](end_span).</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ABA 6: Downloads -->
+        <section id="downloads" class="tab-content">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold text-[#0f3057] mb-4"><i class="fa-solid fa-download mr-2"></i>Central de Arquivos Editáveis</h2>
+                <p class="text-gray-600 mb-6">Baixe os modelos oficiais abaixo para preenchimento. Após assinar, lembre-se de salvar em PDF para envio.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border p-4 rounded flex items-center justify-between hover:bg-gray-50 transition">
+                        <div class="flex items-center">
+                            <i class="fa-regular fa-file-word text-3xl text-blue-600 mr-4"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Planilha Apêndice II</h4>
+                                <p class="text-xs text-gray-500">Comprovação - Grupo I (Pesquisa)[span_87](start_span)[span_87](end_span)</p>
+                            </div>
+                        </div>
+                        <button class="bg-gray-200 hover:bg-blue-600 hover:text-white transition px-4 py-2 rounded text-sm font-bold" onclick="alert('Funcionalidade demonstrativa: Aqui será inserido o link para o arquivo .docx hospedado no Google Drive ou Github.')"><i class="fa-solid fa-cloud-arrow-down"></i></button>
+                    </div>
+
+                    <div class="border p-4 rounded flex items-center justify-between hover:bg-gray-50 transition">
+                        <div class="flex items-center">
+                            <i class="fa-regular fa-file-word text-3xl text-blue-600 mr-4"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Planilha Apêndice III</h4>
+                                <p class="text-xs text-gray-500">Comprovação - Grupo II (Extensão)[span_88](start_span)[span_88](end_span)</p>
+                            </div>
+                        </div>
+                        <button class="bg-gray-200 hover:bg-blue-600 hover:text-white transition px-4 py-2 rounded text-sm font-bold" onclick="alert('Funcionalidade demonstrativa: Aqui será inserido o link para o arquivo .docx hospedado no Google Drive ou Github.')"><i class="fa-solid fa-cloud-arrow-down"></i></button>
+                    </div>
+
+                    <div class="border p-4 rounded flex items-center justify-between hover:bg-gray-50 transition">
+                        <div class="flex items-center">
+                            <i class="fa-regular fa-file-word text-3xl text-blue-600 mr-4"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Requerimento de Colação</h4>
+                                <p class="text-xs text-gray-500">Documento 2024.2 / 2025.1[span_89](start_span)[span_89](end_span)</p>
+                            </div>
+                        </div>
+                        <button class="bg-gray-200 hover:bg-blue-600 hover:text-white transition px-4 py-2 rounded text-sm font-bold" onclick="alert('Funcionalidade demonstrativa: Aqui será inserido o link para o arquivo .docx hospedado no Google Drive ou Github.')"><i class="fa-solid fa-cloud-arrow-down"></i></button>
+                    </div>
+
+                    <div class="border p-4 rounded flex items-center justify-between hover:bg-gray-50 transition">
+                        <div class="flex items-center">
+                            <i class="fa-regular fa-file-pdf text-3xl text-red-600 mr-4"></i>
+                            <div>
+                                <h4 class="font-bold text-sm">Termo de Autorização RIUNIR</h4>
+                                <p class="text-xs text-gray-500">Declaração para autoarquivamento[span_90](start_span)[span_90](end_span)</p>
+                            </div>
+                        </div>
+                        <button class="bg-gray-200 hover:bg-blue-600 hover:text-white transition px-4 py-2 rounded text-sm font-bold" onclick="alert('Funcionalidade demonstrativa: Aqui será inserido o link para o arquivo .pdf hospedado.')"><i class="fa-solid fa-cloud-arrow-down"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Custom Notification Element (replaces alert) -->
-    <div id="notification-box" class="fixed bottom-4 right-4 bg-slate-800 text-white px-6 py-4 rounded-lg shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-3">
-        <i class="fa-solid fa-info-circle text-unir-yellow"></i>
-        <span id="notification-msg" class="text-sm font-medium">Message here</span>
-    </div>
+    <!-- Rodapé -->
+    <footer class="bg-[#0f3057] text-white text-center py-4 text-sm">
+        <p>Departamento de Ciências da Educação (DECED) - Campus Ariquemes</p>
+        <p class="text-gray-400 mt-1">Guia Desenvolvido para Orientação Discente.</p>
+    </footer>
 
+    <!-- Scripts -->
     <script>
-        // Tab Navigation Logic
-        function switchTab(tabId) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.remove('active');
+        // Função para alternar abas
+        function openTab(tabId, element) {
+            // Ocultar todos os conteúdos de aba
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
             });
-            
-            // Show selected tab
+
+            // Remover classe active de todos os botões
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Mostrar a aba clicada e marcar botão como ativo
             document.getElementById(tabId).classList.add('active');
-            
-            // Update Sidebar styling
-            document.querySelectorAll('nav button').forEach(btn => {
-                btn.classList.remove('bg-unir-light', 'border-unir-yellow');
-                btn.classList.add('border-transparent');
-            });
-            
-            // Re-apply styles to active button
-            const activeBtn = document.getElementById(`btn-${tabId}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('border-transparent');
-                activeBtn.classList.add('bg-unir-light', 'border-unir-yellow');
-            }
-
-            // Scroll to top of main area
-            document.querySelector('main').scrollTo(0, 0);
+            element.classList.add('active');
         }
 
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        mobileMenuBtn.addEventListener('click', () => {
-            toggleMobileMenu();
-        });
-
-        function toggleMobileMenu() {
-            if (mobileMenu.classList.contains('-translate-y-full')) {
-                mobileMenu.classList.remove('-translate-y-full');
-                mobileMenuBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+        // Função para interatividade dos acordeões
+        function toggleAccordion(button) {
+            button.classList.toggle('active');
+            const content = button.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
             } else {
-                mobileMenu.classList.add('-translate-y-full');
-                mobileMenuBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+                content.style.maxHeight = content.scrollHeight + "px";
             }
-        }
-
-        // Mock download function replacing standard alert()
-        function downloadMock() {
-            showNotification('O download será iniciado automaticamente na versão final. Os arquivos devem ser vinculados na hospedagem.');
-        }
-
-        function showNotification(message) {
-            const notif = document.getElementById('notification-box');
-            document.getElementById('notification-msg').innerText = message;
-            
-            notif.classList.remove('translate-y-20', 'opacity-0');
-            
-            setTimeout(() => {
-                notif.classList.add('translate-y-20', 'opacity-0');
-            }, 4000);
         }
     </script>
 </body>
